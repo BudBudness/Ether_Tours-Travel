@@ -8,3 +8,55 @@ body { margin: 0; background: #fbfaf7; color: var(--ink); font-family: Arial, He
 a { color: inherit; text-decoration: none; }
 button, input, select, textarea { font: inherit; }
 ::selection { background: #d9a65a; color: #17251f; }
+
+/* Refined interaction layer: restrained depth, accessible focus, and reduced motion. */
+:root {
+  --forest: #173d32;
+  --ink: #17251f;
+  --sand: #f5f1e8;
+  --surface: #fbfaf7;
+  --line: rgba(23, 61, 50, .12);
+}
+body {
+  background: var(--surface);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+a, button, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid #d9a65a;
+  outline-offset: 4px;
+}
+header nav a {
+  transition: color .2s ease, opacity .2s ease;
+}
+header nav a:hover {
+  color: #e9d7b5;
+}
+.group {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .group {
+    transition: transform .35s cubic-bezier(.2,.75,.25,1), box-shadow .35s ease;
+  }
+  a.group:hover, article.group:hover {
+    transform: perspective(1100px) translateY(-5px) rotateX(.35deg);
+    box-shadow: 0 22px 48px rgba(23, 61, 50, .14);
+  }
+}
+::selection {
+  background: #d9a65a;
+  color: #17251f;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
