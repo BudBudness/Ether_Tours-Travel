@@ -3,9 +3,9 @@ import { ArrowLeft, ArrowRight, Compass } from "lucide-react";
 export const metadata = { title: "Explore Tours", description: "Explore East African tour ideas and request a tailored quotation." };
 
 const categories = [
-  { title: "Wildlife safaris", detail: "National parks and classic game drives", image: "photo-1516426122078-c23e76319801", label: "WILDLIFE" },
-  { title: "Gorilla & chimpanzee trekking", detail: "Primate experiences with permit details confirmed individually", image: "photo-1549366021-9f761d450615", label: "PRIMATES" },
-  { title: "Adventure & regional trips", detail: "Nile experiences and journeys across East Africa", image: "photo-1500530855697-b586d89ba3ee", label: "ADVENTURE" },
+  { title: "Wildlife safaris", detail: "National parks and classic game drives", image: "photo-1742327781369-12f428e46c37", label: "WILDLIFE" },
+  { title: "Gorilla & chimpanzee trekking", detail: "Primate experiences with permit details confirmed individually", image: "photo-1711198609915-9d492fed9a00", label: "PRIMATES" },
+  { title: "Adventure & regional trips", detail: "Nile experiences and journeys across East Africa", image: "photo-1516026672322-bc52d61a55d5", label: "ADVENTURE" },
 ];
 
 export default function ToursPage() {
