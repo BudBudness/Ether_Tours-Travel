@@ -2,9 +2,9 @@ import Link from "next/link";
 import { ArrowDownRight, ArrowRight, Compass, Globe2, Leaf, ShieldCheck } from "lucide-react";
 
 const journeys = [
-  { title: "Wildlife safaris", place: "Uganda · Kenya · Tanzania", image: "photo-1516426122078-c23e76319801", tag: "WILDLIFE", position: "center" },
-  { title: "Gorilla encounters", place: "Uganda · Rwanda", image: "photo-1549366021-9f761d450615", tag: "PRIMATES", position: "center" },
-  { title: "Nile & adventure", place: "Jinja · Eastern Uganda", image: "photo-1500530855697-b586d89ba3ee", tag: "ADVENTURE", position: "center" },
+  { title: "Wildlife safaris", place: "Uganda · Kenya · Tanzania", image: "photo-1742327781369-12f428e46c37", tag: "WILDLIFE", position: "center" },
+  { title: "Gorilla encounters", place: "Uganda · Rwanda", image: "photo-1711198609915-9d492fed9a00", tag: "PRIMATES", position: "center" },
+  { title: "Nile & adventure", place: "Jinja · Eastern Uganda", image: "photo-1516026672322-bc52d61a55d5", tag: "ADVENTURE", position: "center" },
 ];
 const benefits = [
   { icon: Compass, title: "Journeys with purpose", text: "Thoughtfully planned experiences shaped around your interests and pace." },
@@ -20,7 +20,7 @@ export default function HomePage() {
       <Link href="/enquire" className="rounded-full bg-amber px-5 py-3 text-sm font-semibold text-ink transition hover:bg-white">Plan your trip <ArrowRight className="ml-2 inline" size={15}/></Link>
     </div></header>
     <section className="relative flex min-h-[740px] items-end bg-forest pb-16 pt-32 text-white md:min-h-[800px] md:pb-24">
-      <div className="absolute inset-0 scale-[1.02] bg-cover bg-center saturate-[.88] contrast-[1.08]" style={{ backgroundImage: "url(https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&crop=entropy&w=2200&q=88)" }} role="img" aria-label="Wildlife safari landscape in East Africa"/>
+      <div className="absolute inset-0 scale-[1.02] bg-cover bg-center saturate-[.88] contrast-[1.08]" style={{ backgroundImage: "url(https://images.unsplash.com/photo-1742327781369-12f428e46c37?auto=format&fit=crop&crop=entropy&w=2200&q=88)" }} role="img" aria-label="Wildlife safari landscape in East Africa"/>
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(9,30,24,.88)_0%,rgba(9,30,24,.55)_48%,rgba(9,30,24,.08)_100%),linear-gradient(0deg,rgba(9,30,24,.5),transparent_55%)]"/>
       <div className="relative mx-auto w-full max-w-7xl px-5 lg:px-8"><div className="max-w-3xl">
         <p className="mb-6 flex items-center gap-3 text-xs font-semibold uppercase tracking-[.3em] text-sand"><span className="h-px w-9 bg-amber"/> East Africa, thoughtfully explored</p>
