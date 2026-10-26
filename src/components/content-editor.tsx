@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 const EDITOR_EMAIL = "ethertoursandtravel26@gmail.com";
 
 export function ContentEditor() {
-  const supabase = createClient();
+  const supabase = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? createClient() : null;
   const [email, setEmail] = useState("");
   const [signedIn, setSignedIn] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -17,6 +17,7 @@ export function ContentEditor() {
   const [saving, setSaving] = useState(false);
 
   async function refreshSession() {
+    if (!supabase) { setMessage("Dashboard setup is pending: the owner must connect the dedicated Ether Tours Supabase project."); setLoading(false); return; }
     const { data } = await supabase.auth.getUser();
     const userEmail = data.user?.email?.toLowerCase() ?? "";
     setEmail(userEmail);
@@ -29,6 +30,7 @@ export function ContentEditor() {
   }
 
   async function loadRows(activeTab = tab) {
+    if (!supabase) { setMessage("Dashboard setup is pending: the owner must connect the dedicated Ether Tours Supabase project."); setLoading(false); return; }
     setLoading(true);
     setMessage("");
     const table = activeTab === "tours" ? "tours" : "destinations";
@@ -44,6 +46,7 @@ export function ContentEditor() {
 
   async function signIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!supabase) { setMessage("Dashboard setup is pending. Please contact the site owner."); return; }
     setLoading(true);
     setMessage("");
     const form = new FormData(event.currentTarget);
@@ -63,6 +66,7 @@ export function ContentEditor() {
 
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!supabase) return;
     if (!selectedId) return;
     setSaving(true);
     setMessage("");
@@ -87,7 +91,7 @@ export function ContentEditor() {
   }
 
   async function signOut() {
-    await supabase.auth.signOut();
+    if (supabase) await supabase.auth.signOut();
     setSignedIn(false);
     setRows([]);
     setMessage("Signed out.");
