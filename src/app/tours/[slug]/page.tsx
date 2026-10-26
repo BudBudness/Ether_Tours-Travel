@@ -13,9 +13,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   try {
     const supabase = await createClient();
     const { data } = await supabase.from("tours").select("title,summary").eq("slug", slug).eq("status", "published").maybeSingle();
-    if (data) return { title: data.title, description: data.summary };
+    if (data) return { title: data.title, description: data.summary, alternates: { canonical: `/tours/${slug}` }, openGraph: { url: `/tours/${slug}` } };
   } catch { /* Missing environment/database is handled by the page fallback. */ }
-  return { title: "Tour details" };
+  return { title: "Tour details", alternates: { canonical: `/tours/${slug}` }, openGraph: { url: `/tours/${slug}` } };
 }
 
 export default async function TourDetailPage({ params }: { params: Promise<{ slug: string }> }) {
