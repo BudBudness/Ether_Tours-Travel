@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
-export const metadata = { title: "Explore Tours", description: "Explore East African tour ideas and request a tailored quotation." };
+export const metadata = { title: "Explore Tours", description: "Explore East African tour ideas and request a tailored quotation.", alternates: { canonical: "/tours" }, openGraph: { url: "/tours" } };
 const categories = [
   { title: "Wildlife safaris", detail: "National parks and classic game drives", image: "photo-1742327781369-12f428e46c37", label: "WILDLIFE" },
   { title: "Gorilla & chimpanzee trekking", detail: "Primate experiences with permit details confirmed individually", image: "photo-1711198609915-9d492fed9a00", label: "PRIMATES" },
