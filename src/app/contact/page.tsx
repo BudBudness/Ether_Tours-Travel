@@ -10,6 +10,7 @@ export const metadata = {
 };
 
 const whatsappUrl = "https://wa.me/256706887049";
+const businessEmail = "ethertoursandtravel26@gmail.com";
 
 export default function ContactPage() {
   return (
@@ -20,13 +21,14 @@ export default function ContactPage() {
           <p className="text-xs font-semibold uppercase tracking-[.25em] text-moss">Let&apos;s talk travel</p>
           <h1 className="mt-4 text-4xl font-medium tracking-tight md:text-6xl">Contact Ether Tours &amp; Travel.</h1>
           <p className="mt-5 max-w-2xl leading-7 text-stone-600">
-            Tell us what kind of East African journey you have in mind. For trip planning and enquiries, contact us directly on WhatsApp.
+            Tell us what kind of East African journey you have in mind. Contact us by email or WhatsApp to discuss your travel plans.
           </p>
           <div className="mt-9 grid gap-4 md:grid-cols-2">
             <article className="rounded-2xl border border-stone-200 bg-white p-6">
               <Mail className="text-moss" size={24} />
               <h2 className="mt-4 text-xl font-semibold">Email</h2>
-              <p className="mt-2 text-sm leading-6 text-stone-600">Our branded business email is being configured. Until it is verified, please use WhatsApp.</p>
+              <a href={`mailto:${businessEmail}`} className="mt-2 inline-block break-all text-sm leading-6 text-forest underline underline-offset-4">{businessEmail}</a>
+              <p className="mt-2 text-sm leading-6 text-stone-600">Send us your travel questions and itinerary requests.</p>
             </article>
             <article className="rounded-2xl border border-stone-200 bg-white p-6">
               <MessageCircle className="text-moss" size={24} />
