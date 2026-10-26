@@ -90,6 +90,21 @@ export function ContentEditor() {
     if (!error) await loadRows(tab);
   }
 
+  async function createEntry() {
+    if (!supabase) return;
+    setSaving(true);
+    const stamp = String(Date.now());
+    const table = tab === "tours" ? "tours" : "destinations";
+    const payload = tab === "tours"
+      ? { slug: "draft-tour-" + stamp, title: "New tour draft", summary: "Complete this summary before requesting publication.", duration_days: 1, duration_nights: 0, price_on_request: true, status: "draft" }
+      : { name: "New destination draft", slug: "draft-destination-" + stamp, summary: "Complete this summary before requesting publication.", status: "draft" };
+    const { data, error } = await supabase.from(table).insert(payload).select("id").single();
+    setSaving(false);
+    if (error || !data) { setMessage(error?.message ?? "Could not create draft."); return; }
+    await loadRows(tab);
+    setSelectedId(String(data.id));
+    setMessage("Draft created. Complete the fields and save it for owner review.");
+  }
   async function signOut() {
     if (supabase) await supabase.auth.signOut();
     setSignedIn(false);
@@ -134,7 +149,7 @@ export function ContentEditor() {
         </div>
         <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(260px,0.75fr)_minmax(0,1.5fr)]">
           <section className="rounded-2xl border border-stone-200 bg-white p-4">
-            <div className="flex items-center justify-between gap-3"><h2 className="font-semibold">{tab === "tours" ? "Tour entries" : "Destinations"}</h2><button onClick={() => void loadRows(tab)} className="text-xs font-semibold text-moss">Refresh</button></div>
+            <div className="flex items-center justify-between gap-3"><h2 className="font-semibold">{tab === "tours" ? "Tour entries" : "Destinations"}</h2><button onClick={createEntry} disabled={saving} className="text-xs font-semibold text-forest disabled:opacity-50">+ Add draft</button><button onClick={() => void loadRows(tab)} className="text-xs font-semibold text-moss">Refresh</button></div>
             {loading ? <p className="py-5 text-sm text-stone-500">Loading content…</p> : rows.length === 0 ? <p className="py-5 text-sm leading-6 text-stone-500">No entries found. The site owner must seed or create catalogue records before they can be edited.</p> : <ul className="mt-3 space-y-2">{rows.map(row => <li key={String(row.id)}><button onClick={() => setSelectedId(String(row.id))} className={`w-full rounded-xl border p-3 text-left ${selectedId === row.id ? "border-forest bg-[#f0ede4]" : "border-stone-200 hover:bg-stone-50"}`}><span className="block font-medium">{String(row.title ?? row.name ?? "Untitled")}</span><span className="mt-1 block text-xs text-stone-500">{String(row.status ?? "draft")} · /{tab === "tours" ? "tours/" : "destinations/"}{String(row.slug ?? "")}</span></button></li>)}</ul>}
           </section>
           <section className="rounded-2xl border border-stone-200 bg-white p-5 md:p-7">
