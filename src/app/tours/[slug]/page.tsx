@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 
-type Tour = { id: string; slug: string; title: string; summary: string; description: string | null; duration_days: number; duration_nights: number; price_on_request: boolean };
+type Tour = { id: string; slug: string; title: string; summary: string; description: string | null; duration_days: number; duration_nights: number };
 type Day = { day_number: number; title: string; description: string; accommodation_notes: string | null };
 type Inclusion = { item: string; item_type: string };
 
@@ -24,7 +24,7 @@ export default async function TourDetailPage({ params }: { params: Promise<{ slu
   let inclusions: Inclusion[] = [];
   try {
     const supabase = await createClient();
-    const result = await supabase.from("tours").select("id,slug,title,summary,description,duration_days,duration_nights,price_on_request").eq("slug", slug).eq("status", "published").maybeSingle();
+    const result = await supabase.from("tours").select("id,slug,title,summary,description,duration_days,duration_nights").eq("slug", slug).eq("status", "published").maybeSingle();
     if (result.error || !result.data) notFound();
     tour = result.data as Tour;
     const [dayResult, inclusionResult] = await Promise.all([
