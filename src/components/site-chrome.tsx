@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Compass } from "lucide-react";
+import { ArrowRight, Compass, MessageCircle } from "lucide-react";
 
 const links = [
   { href: "/tours", label: "Tours" },
@@ -18,7 +18,12 @@ export function SiteHeader() {
       <nav className="hidden items-center gap-6 text-sm text-stone-600 md:flex" aria-label="Main navigation">
         {links.map(link => <Link key={link.href} href={link.href} className="transition-colors hover:text-forest">{link.label}</Link>)}
       </nav>
-      <Link href="/enquire" className="inline-flex items-center rounded-full bg-amber px-4 py-3 text-sm font-semibold text-ink transition duration-200 hover:-translate-y-0.5 hover:bg-[#e7bd78] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-forest">Plan a trip <ArrowRight className="ml-2" size={15}/></Link>
+      <div className="flex items-center gap-2">
+        <Link href="https://wa.me/256706887049" target="_blank" rel="noopener noreferrer" aria-label="Message Ether Tours & Travel on WhatsApp" className="inline-flex items-center rounded-full border border-forest/20 px-3 py-3 text-sm font-semibold text-forest transition hover:bg-forest/5">
+          <MessageCircle size={17} className="md:mr-2" /><span className="hidden lg:inline">WhatsApp</span>
+        </Link>
+        <Link href="/enquire" className="inline-flex items-center rounded-full bg-amber px-4 py-3 text-sm font-semibold text-ink transition duration-200 hover:-translate-y-0.5 hover:bg-[#e7bd78] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-forest">Plan a trip <ArrowRight className="ml-2" size={15}/></Link>
+      </div>
     </div>
     <nav className="flex gap-5 overflow-x-auto border-t border-forest/5 px-5 py-3 text-xs text-stone-600 md:hidden" aria-label="Mobile navigation">
       {links.map(link => <Link key={link.href} href={link.href} className="shrink-0">{link.label}</Link>)}
@@ -31,7 +36,7 @@ export function SiteFooter() {
     <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 py-8 text-sm text-stone-500 md:flex-row md:items-center md:justify-between lg:px-8">
       <Link href="/" className="font-semibold tracking-[.16em] text-forest">ETHER TOURS & TRAVEL</Link>
       <p>Explore East Africa, one journey at a time.</p>
-      <div className="flex gap-5"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/contact">Contact</Link></div>
+      <div className="flex flex-wrap gap-5"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/contact">Contact</Link><Link href="https://wa.me/256706887049" target="_blank" rel="noopener noreferrer">WhatsApp</Link></div>
     </div>
   </footer>;
 }
