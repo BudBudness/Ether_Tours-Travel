@@ -27,6 +27,12 @@ export function EnquiryForm({ siteKey, privacyVersion }: Props) {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ kind: "success" | "error"; text: string } | null>(null);
   const [reference, setReference] = useState("");
+  const [destination, setDestination] = useState("");
+
+  useEffect(() => {
+    const tour = new URLSearchParams(window.location.search).get("tour");
+    if (tour) setDestination(tour.replace(/-/g, " "));
+  }, []);
 
   useEffect(() => {
     if (!siteKey || !window.turnstile || !widgetRef.current || widgetId.current) return;
@@ -47,6 +53,7 @@ export function EnquiryForm({ siteKey, privacyVersion }: Props) {
     if (busy) return;
     setBusy(true);
     setMessage(null);
+    setReference("");
     const form = event.currentTarget;
     const data = new FormData(form);
     const payload = {
@@ -77,6 +84,7 @@ export function EnquiryForm({ siteKey, privacyVersion }: Props) {
       setReference(result.reference || "");
       setMessage({ kind: "success", text: result.notice || "Your enquiry has been received. This is not a confirmed booking." });
       form.reset();
+      setDestination("");
       setToken("");
       if (widgetId.current) window.turnstile?.reset(widgetId.current);
     } catch (error) {
@@ -113,7 +121,7 @@ export function EnquiryForm({ siteKey, privacyVersion }: Props) {
           <label className={labelClass}>Phone / WhatsApp
             <input className={fieldClass} name="phone" type="tel" autoComplete="tel" maxLength={40} />
           </label>
-          <label className={labelClass}>Country of residence
+          <label className={labelClass}>Country code
             <input className={fieldClass} name="countryCode" placeholder="e.g. UG" maxLength={2} />
           </label>
           <label className={labelClass}>Preferred contact method
@@ -124,7 +132,7 @@ export function EnquiryForm({ siteKey, privacyVersion }: Props) {
             </select>
           </label>
           <label className={labelClass}>Destination or experience
-            <input className={fieldClass} name="destination" placeholder="e.g. Uganda safari, gorilla trekking" maxLength={300} />
+            <input className={fieldClass} name="destination" value={destination} onChange={event => setDestination(event.target.value)} placeholder="e.g. Uganda safari, gorilla trekking" maxLength={300} />
           </label>
           <label className={labelClass}>Preferred start date
             <input className={fieldClass} name="startDate" type="date" />
