@@ -14,7 +14,9 @@ export default function EnquirePage() {
 
   const configured =
     process.env.ETHER_ENQUIRIES_ENABLED === "true" &&
+    process.env.ETHER_PRIVACY_NOTICE_APPROVED === "true" &&
     Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) &&
+    Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) &&
     Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY) &&
     Boolean(process.env.TURNSTILE_SECRET_KEY) &&
     Boolean(process.env.RESEND_API_KEY) &&
