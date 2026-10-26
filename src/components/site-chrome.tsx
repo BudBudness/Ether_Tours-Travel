@@ -8,6 +8,8 @@ const links = [
   { href: "/contact", label: "Contact" },
 ];
 
+const businessEmail = "ethertoursandtravel26@gmail.com";
+
 export function SiteHeader() {
   return <header className="relative z-20 border-b border-forest/10 bg-[#fbfaf7]/95 backdrop-blur">
     <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
@@ -36,7 +38,7 @@ export function SiteFooter() {
     <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 py-8 text-sm text-stone-500 md:flex-row md:items-center md:justify-between lg:px-8">
       <Link href="/" className="font-semibold tracking-[.16em] text-forest">ETHER TOURS & TRAVEL</Link>
       <p>Explore East Africa, one journey at a time.</p>
-      <div className="flex flex-wrap gap-5"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/contact">Contact</Link><Link href="https://wa.me/256706887049" target="_blank" rel="noopener noreferrer">WhatsApp</Link></div>
+      <div className="flex flex-wrap gap-5"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/contact">Contact</Link><Link href={`mailto:${businessEmail}`}>Email</Link><Link href="https://wa.me/256706887049" target="_blank" rel="noopener noreferrer">WhatsApp</Link></div>
     </div>
   </footer>;
 }
