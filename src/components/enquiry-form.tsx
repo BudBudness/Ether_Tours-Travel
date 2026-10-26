@@ -148,7 +148,7 @@ export function EnquiryForm({ siteKey, privacyVersion }: Props) {
           </label>
         </div>
         <label className={labelClass}>Trip notes and preferences
-          <textarea className={fieldClass} name="notes" rows={5} maxLength={3000} placeholder="Interests, accommodation preferences, estimated budget, accessibility or dietary arrangements you choose to share." />
+          <textarea className={fieldClass} name="notes" rows={5} maxLength={3000} placeholder="Interests, accommodation preferences, accessibility or dietary arrangements you choose to share." />
         </label>
         <div aria-hidden="true" className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden">
           <label>Leave this field empty<input name="website" tabIndex={-1} autoComplete="off" /></label>
@@ -170,7 +170,7 @@ export function EnquiryForm({ siteKey, privacyVersion }: Props) {
         <button type="submit" disabled={busy || !token || !siteKey} className="inline-flex items-center justify-center rounded-full bg-forest px-7 py-4 text-sm font-semibold text-white transition hover:bg-[#245846] disabled:cursor-not-allowed disabled:opacity-50">
           {busy ? "Submitting…" : "Send travel enquiry"}
         </button>
-        <p className="text-xs leading-5 text-stone-500">This is an enquiry only. No booking, permit, price or availability is confirmed until the operator responds in writing.</p>
+        <p className="text-xs leading-5 text-stone-500">This is an enquiry only. No booking, permit or availability is confirmed until the operator responds in writing.</p>
       </form>
     </>
   );
