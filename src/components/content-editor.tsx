@@ -55,7 +55,7 @@ export function ContentEditor() {
     }
     const { error } = await supabase.auth.signInWithOtp({
       email: loginEmail,
-      options: { emailRedirectTo: `${window.location.origin}/admin/content` },
+      options: { emailRedirectTo: `${window.location.origin}/admin/content`, shouldCreateUser: false },
     });
     setMessage(error ? error.message : "A secure sign-in link has been sent if this account is enabled in the authentication project.");
     setLoading(false);
