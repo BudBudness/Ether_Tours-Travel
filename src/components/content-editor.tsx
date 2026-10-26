@@ -93,18 +93,39 @@ export function ContentEditor() {
   async function createEntry() {
     if (!supabase) return;
     setSaving(true);
+    setMessage("");
     const stamp = String(Date.now());
-    const table = tab === "tours" ? "tours" : "destinations";
-    const payload = tab === "tours"
-      ? { slug: "draft-tour-" + stamp, title: "New tour draft", summary: "Complete this summary before requesting publication.", duration_days: 1, duration_nights: 0, price_on_request: true, status: "draft" }
-      : { name: "New destination draft", slug: "draft-destination-" + stamp, summary: "Complete this summary before requesting publication.", status: "draft" };
-    const { data, error } = await supabase.from(table).insert(payload).select("id").single();
+    let createdId: string | null = null;
+    let failure: string | null = null;
+    if (tab === "tours") {
+      const result = await supabase.from("tours").insert({
+        slug: "draft-tour-" + stamp,
+        title: "New tour draft",
+        summary: "Complete this summary before requesting publication.",
+        duration_days: 1,
+        duration_nights: 0,
+        price_on_request: true,
+        status: "draft",
+      }).select("id").single();
+      createdId = result.data?.id ?? null;
+      failure = result.error?.message ?? null;
+    } else {
+      const result = await supabase.from("destinations").insert({
+        name: "New destination draft",
+        slug: "draft-destination-" + stamp,
+        summary: "Complete this summary before requesting publication.",
+        status: "draft",
+      }).select("id").single();
+      createdId = result.data?.id ?? null;
+      failure = result.error?.message ?? null;
+    }
     setSaving(false);
-    if (error || !data) { setMessage(error?.message ?? "Could not create draft."); return; }
+    if (failure || !createdId) { setMessage(failure ?? "Could not create draft."); return; }
     await loadRows(tab);
-    setSelectedId(String(data.id));
+    setSelectedId(createdId);
     setMessage("Draft created. Complete the fields and save it for owner review.");
   }
+
   async function signOut() {
     if (supabase) await supabase.auth.signOut();
     setSignedIn(false);
