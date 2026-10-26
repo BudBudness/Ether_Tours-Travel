@@ -32,10 +32,7 @@ export function ContentEditor() {
     setLoading(true);
     setMessage("");
     const table = activeTab === "tours" ? "tours" : "destinations";
-    const columns = activeTab === "tours"
-      ? "id,slug,title,summary,description,duration_days,duration_nights,status,seo_title,seo_description"
-      : "id,name,slug,country_code,summary,description,status";
-    const { data, error } = await supabase.from(table).select(columns).order("updated_at", { ascending: false });
+    const { data, error } = await supabase.from(table).select("*").order("updated_at", { ascending: false });
     if (error) setMessage(error.message);
     setRows((data ?? []) as Record<string, unknown>[]);
     setSelectedId("");
@@ -140,7 +137,7 @@ export function ContentEditor() {
             <h2 className="text-lg font-semibold">Edit selected content</h2><p className="mt-1 text-sm leading-6 text-stone-500">Changes are saved for owner review. This account cannot publish content.</p>
             {!selected ? <p className="mt-6 text-sm text-stone-500">Select an entry from the list to edit it.</p> : <form key={selectedId + tab} onSubmit={save} className="mt-5 space-y-4">
               {fields.map(field => <label key={field.key} className="block text-sm font-medium">{field.label}{field.area ? <textarea name={field.key} defaultValue={String(selected[field.key] ?? "")} rows={field.key === "description" ? 6 : 3} className="mt-2 w-full rounded-xl border border-stone-300 px-4 py-3 font-normal leading-6 outline-none focus:border-forest" /> : <input name={field.key} type={field.number ? "number" : "text"} min={field.number ? 0 : undefined} defaultValue={String(selected[field.key] ?? "")} className="mt-2 w-full rounded-xl border border-stone-300 px-4 py-3 font-normal outline-none focus:border-forest" />}</label>)}
-              <label className="block text-sm font-medium">Workflow status<select name="status" defaultValue={String(selected.status ?? "draft")} className="mt-2 w-full rounded-xl border border-stone-300 bg-white px-4 py-3 font-normal"><option value="draft">Draft</option><option value="review">Ready for owner review</option><option value="archived">Archived</option></select></label>
+              <label className="block text-sm font-medium">Workflow status<select name="status" defaultValue={selected.status === "published" ? "review" : String(selected.status ?? "draft")} className="mt-2 w-full rounded-xl border border-stone-300 bg-white px-4 py-3 font-normal"><option value="draft">Draft</option><option value="review">Ready for owner review</option><option value="archived">Archived</option></select></label>
               <button disabled={saving} className="rounded-full bg-forest px-6 py-3 text-sm font-semibold text-white disabled:opacity-60">{saving ? "Saving…" : "Save for review"}</button>
             </form>}
           </section>
