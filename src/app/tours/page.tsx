@@ -1,17 +1,26 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
+import { createClient } from "@/lib/supabase/server";
+
 export const metadata = { title: "Explore Tours", description: "Explore East African tour ideas and request a tailored quotation.", alternates: { canonical: "/tours" }, openGraph: { url: "/tours" } };
-const categories = [
-  { title: "Wildlife safaris", detail: "National parks and classic game drives", image: "photo-1742327781369-12f428e46c37", label: "WILDLIFE" },
-  { title: "Gorilla & chimpanzee trekking", detail: "Primate experiences with permit details confirmed individually", image: "photo-1711198609915-9d492fed9a00", label: "PRIMATES" },
-  { title: "Adventure & regional trips", detail: "Nile experiences and journeys across East Africa", image: "photo-1516026672322-bc52d61a55d5", label: "ADVENTURE" },
-];
-export default function ToursPage() {
+type Tour = { id: string; slug: string; title: string; summary: string; duration_days: number; duration_nights: number };
+
+async function getTours(): Promise<Tour[]> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase.from("tours").select("id,slug,title,summary,duration_days,duration_nights").eq("status", "published").order("featured", { ascending: false }).order("title");
+    if (error) return [];
+    return (data ?? []) as Tour[];
+  } catch { return []; }
+}
+
+export default async function ToursPage() {
+  const tours = await getTours();
   return <><SiteHeader/><main className="min-h-screen bg-[#fbfaf7] px-5 md:px-10"><section className="mx-auto max-w-6xl py-16 md:py-24">
     <p className="text-xs font-semibold uppercase tracking-[.25em] text-moss">The tour collection</p><h1 className="mt-4 max-w-3xl text-4xl font-medium tracking-tight md:text-6xl">Find the journey that feels like yours.</h1>
     <p className="mt-5 max-w-2xl leading-7 text-stone-600">Explore trip ideas across East Africa. Itineraries, inclusions and permit requirements are confirmed for your travel dates before booking.</p>
-    <div className="mt-10 grid gap-6 md:grid-cols-3">{categories.map(x=><article key={x.title} className="group overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(23,61,50,.12)]"><div className="relative h-64 overflow-hidden bg-forest"><div className="absolute inset-0 scale-[1.02] bg-cover bg-center saturate-[.88] contrast-[1.08] transition duration-700 group-hover:scale-110" role="img" aria-label={x.title} style={{backgroundImage:`url(https://images.unsplash.com/${x.image}?auto=format&fit=crop&crop=entropy&w=900&q=85)`}}/><div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/10"/><span className="absolute left-4 top-4 rounded-full border border-white/50 bg-black/20 px-3 py-2 text-[10px] font-semibold tracking-[.18em] text-white backdrop-blur">{x.label}</span></div><div className="p-6"><h2 className="text-xl font-semibold">{x.title}</h2><p className="mt-3 min-h-12 text-sm leading-6 text-stone-600">{x.detail}</p><Link href="/enquire" className="mt-6 inline-flex items-center text-sm font-semibold text-forest">Ask about this <ArrowRight className="ml-2 transition group-hover:translate-x-1" size={15}/></Link></div></article>)}</div>
-    <div className="mt-10 rounded-2xl bg-[#f0ede4] p-6 md:p-8"><h2 className="text-xl font-semibold">Have a specific itinerary in mind?</h2><p className="mt-2 text-sm leading-6 text-stone-600">Share your dates, group size and interests to begin planning a tailored quotation.</p><Link href="/enquire" className="mt-5 inline-flex rounded-full bg-forest px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#245846]">Request a quotation <ArrowRight className="ml-2" size={15}/></Link></div>
+    {tours.length ? <div className="mt-10 grid gap-6 md:grid-cols-3">{tours.map(tour=><article key={tour.id} className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"><p className="text-xs font-semibold uppercase tracking-widest text-moss">Tailored journey</p><h2 className="mt-4 text-xl font-semibold">{tour.title}</h2><p className="mt-3 text-sm leading-6 text-stone-600">{tour.summary}</p><p className="mt-4 text-xs text-stone-500">{tour.duration_days} days · {tour.duration_nights} nights · Quotation on request</p><Link href={`/tours/${tour.slug}`} className="mt-6 inline-flex items-center text-sm font-semibold text-forest">Explore this tour <ArrowRight className="ml-2" size={15}/></Link></article>)}</div> : <div className="mt-10 grid gap-6 md:grid-cols-3">{[{title:"Wildlife safaris",detail:"National parks and classic game drives"},{title:"Gorilla & chimpanzee trekking",detail:"Primate experiences with permit details confirmed individually"},{title:"Adventure & regional trips",detail:"Nile experiences and journeys across East Africa"}].map((item,i)=><article key={item.title} className="rounded-2xl border border-stone-200 bg-white p-6"><p className="text-xs font-semibold uppercase tracking-widest text-moss">0{i+1} / TOUR IDEA</p><h2 className="mt-4 text-xl font-semibold">{item.title}</h2><p className="mt-3 text-sm leading-6 text-stone-600">{item.detail}</p><Link href="/enquire" className="mt-6 inline-flex items-center text-sm font-semibold text-forest">Ask about this <ArrowRight className="ml-2" size={15}/></Link></article>)}</div>}
+    <div className="mt-10 rounded-2xl bg-[#f0ede4] p-6 md:p-8"><h2 className="text-xl font-semibold">Have a specific itinerary in mind?</h2><p className="mt-2 text-sm leading-6 text-stone-600">Share your dates, group size and interests to begin planning a tailored quotation.</p><Link href="/enquire" className="mt-5 inline-flex rounded-full bg-forest px-6 py-3 text-sm font-semibold text-white">Request a quotation <ArrowRight className="ml-2" size={15}/></Link></div>
   </section></main><SiteFooter/></>;
 }
