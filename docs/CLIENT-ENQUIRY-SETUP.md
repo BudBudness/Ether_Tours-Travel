@@ -1,92 +1,45 @@
 # Ether Tours & Travel — Client Enquiry Setup
 
-Please complete the questions below so the website can accept trip enquiries safely. The website currently does **not** submit or store enquiries. Do not send passwords, API secrets, or payment details in this form.
+The secure enquiry form and server endpoint are implemented on the feature branch. The public form must remain disabled until the operator completes the configuration and launch checks below. Do not send passwords, API secrets, or payment details in this document or chat.
 
-## 1. Business identity
-- Official business name as it should appear on the website:
-- Registered country / registration details to publish (if applicable):
-- Public office address or service area:
-- Official business email:
-- Main phone number, including country code:
-- WhatsApp number, including country code:
-- Business hours and time zone:
-- Preferred customer-facing language(s):
+## Required Vercel server environment
 
-## 2. Who receives enquiries?
-- Primary recipient email for new enquiries:
-- Backup recipient email:
-- Staff member/role responsible for responding:
-- Expected response time (e.g. within one business day):
-- Should an acknowledgement email be sent to the traveller? Yes / No
-- Approved wording for the acknowledgement, if any:
+Set these in the Vercel project environment settings; never commit secret values:
+- `ETHER_ENQUIRIES_ENABLED=true` only after every launch gate below passes.
+- `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+- `SUPABASE_SERVICE_ROLE_KEY` (server-only; never a `NEXT_PUBLIC_*` variable).
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY`.
+- `RESEND_API_KEY`.
+- `ETHER_ENQUIRY_RECIPIENT` (approved staff inbox).
+- `ETHER_ENQUIRY_FROM` (sender on a verified Resend domain).
+- `ETHER_PRIVACY_NOTICE_VERSION` (version of the approved published privacy notice).
 
-## 3. What should the form ask?
-Confirm each field as Required or Optional:
-- Full name:
-- Email:
-- Phone / WhatsApp:
-- Country of residence:
-- Destination(s):
-- Preferred travel start and end dates:
-- Are dates flexible?:
-- Number of adults:
-- Number of children and ages (if relevant):
-- Tour interests (wildlife, gorillas/primates, culture, adventure, beach, other):
-- Accommodation preference / budget range:
-- Estimated budget and currency:
-- Accessibility, dietary, or other arrangements the traveller chooses to share:
-- Additional trip notes:
-- Preferred contact method:
-- Anything else the operator needs:
+The endpoint fails closed if configuration is missing. It validates payloads and origin, applies a honeypot and Cloudflare Turnstile verification, writes enquiry and itinerary details through the server-only Supabase service key, then sends a Resend notification. If notification delivery fails after storage, the response includes the reference and a warning; the event is logged for staff follow-up.
 
-Do not ask for passport numbers, payment-card details, or other sensitive information in the initial enquiry form.
+## Required database
 
-## 4. Catalogue and booking boundaries
-- Destinations currently served:
-- Tours/packages approved for publication:
-- Confirmed inclusions and exclusions:
-- Permit / park-fee wording that must be shown:
-- Cancellation/refund policy URL or approved text:
-- Is this an enquiry only, with no online booking/payment? Yes / No
-- Exact disclaimer to show before submission:
-- Who confirms final price, availability, permits and itinerary?
+Apply `supabase/migrations/202610160001_initial_catalogue.sql` to the intended Supabase project after review. It defines `enquiries`, `enquiry_items` and `enquiry_events`. The endpoint relies on these tables and their current columns. Service-role access bypasses RLS; keep the service key server-only and do not add public write policies for customer enquiry tables.
 
-## 5. Privacy and data handling
-- Name of the legal entity responsible for customer data:
-- Privacy contact email:
-- Countries/regions the business serves:
-- How long should unanswered enquiries be retained?:
-- How long should converted/cancelled enquiries be retained?:
-- Who is authorised to view enquiries?:
-- Should enquiries be deleted on request, and who handles those requests?:
-- Approved privacy-policy text or legal adviser contact:
-- Consent checkbox wording approved by the business:
+## Operator decisions required before launch
 
-## 6. Storage and notification setup
-Preferred approach (recommendation: Supabase database with server-side validation and Row Level Security, plus email notification):
-- Existing Supabase project for this website? Yes / No
-- If yes, project URL (not a password or service-role key):
-- Who can grant project access securely?
-- Preferred email provider for notifications (if already used):
-- Notification sender address/domain, if configured:
-- Is there an existing CRM or enquiry inbox to integrate?:
-- Staff who need a private enquiry dashboard:
+- Official business name and approved public contact details.
+- Staff recipient inbox and a verified sender domain.
+- Legal entity/data controller, privacy contact, purposes, lawful basis, retention period, rights and international-transfer disclosures for the published privacy notice.
+- Approved privacy notice text and version identifier.
+- Confirmed destinations, tour descriptions, itinerary inclusions/exclusions and permit/park-fee wording.
+- Named staff responsible for reviewing enquiries and following up on failed notifications.
+- Approved response-time expectations and final launch sign-off.
 
-Never paste Supabase service-role keys, SMTP passwords, email API keys, or other secrets into this document or a chat. Configure secrets directly in the authorised provider dashboard / Vercel environment settings.
+Do not collect traveller data while the privacy notice is still a draft. The public form remains closed unless all required environment variables are set and the operator explicitly enables it.
 
-## 7. Anti-spam and launch approval
-- Is CAPTCHA/Turnstile acceptable? Yes / No
-- Is email verification required before an enquiry is accepted? Yes / No
-- Any expected high-volume campaign or traffic source?:
-- Person authorised to approve the live form:
-- Person authorised to approve the privacy and terms pages:
-- Final approval date:
+## Release verification checklist
 
-## 8. Final content approval
-- Confirm public email and phone/WhatsApp are correct: Yes / No
-- Confirm destinations and tour descriptions are accurate: Yes / No
-- Confirm prices/availability are not advertised unless verified: Yes / No
-- Confirm enquiry is not a booking confirmation: Yes / No
-- Confirm privacy and terms have been reviewed: Yes / No
+1. Run the CI workflow: `npm run typecheck`, `npm run lint`, and `npm run build`.
+2. Verify a valid Turnstile-protected test enquiry is stored once and returns a reference.
+3. Verify malformed email, missing privacy acknowledgement, invalid dates/counts, honeypot submissions and invalid Turnstile tokens are rejected.
+4. Verify anonymous clients cannot read or mutate `enquiries`, `enquiry_items` or `enquiry_events` directly.
+5. Verify staff notification arrives at the approved inbox; simulate provider failure and confirm a notification-failure event is logged.
+6. Confirm the privacy notice is approved and published before setting `ETHER_ENQUIRIES_ENABLED=true`.
+7. Confirm the production deployment and perform one operator-authorised end-to-end test, then remove the test enquiry.
 
-Once this information is returned, the enquiry flow can be implemented with server-side validation, spam controls, secure database writes, notification delivery, and tests. The live form should remain closed until those checks pass.
+Never request passport numbers, payment-card details or other sensitive information in the initial enquiry form. An enquiry is not a booking confirmation. Final prices, availability, permits and itineraries must be confirmed by the operator in writing.
