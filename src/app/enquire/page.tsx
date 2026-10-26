@@ -6,6 +6,8 @@ import { EnquiryForm } from "@/components/enquiry-form";
 export const metadata = {
   title: "Request a Quotation",
   description: "Tell Ether Tours & Travel about the journey you want to plan.",
+  alternates: { canonical: "/enquire" },
+  openGraph: { url: "/enquire" },
 };
 
 export default function EnquirePage() {
