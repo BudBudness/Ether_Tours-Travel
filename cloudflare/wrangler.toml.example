@@ -1,0 +1,11 @@
+# Copy to wrangler.toml after creating the D1 database.
+# Do not commit real account identifiers or secrets.
+name = "ether-tours-catalogue"
+main = "worker/index.ts"
+compatibility_date = "2026-11-17"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ether-tours"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+migrations_dir = "migrations"
