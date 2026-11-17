@@ -1,6 +1,6 @@
 # Cloudflare migration — controlled implementation contract
 
-Status: architecture gate; no production resources changed.
+Status: first implementation slice committed on the migration PR; production resources remain unchanged. The Cloudflare folder now contains a D1 SQLite schema, migration contract tests, and a read-only Worker API for published destinations and tours, tour detail, itinerary, inclusions, and approved in-date pricing. Enquiry intake, identity, staff access, R2 delivery and deployment remain gated.
 
 ## Target runtime
 
@@ -42,8 +42,8 @@ The existing application is Next.js 15 and uses `@supabase/ssr`, Supabase Auth, 
 
 - [ ] Decide the Cloudflare application runtime and validate the current Next.js feature set against it.
 - [ ] Identity/authentication model documented and implemented; editor and staff routes deny anonymous access.
-- [ ] D1 schema and migration tests pass against local D1.
-- [ ] Public catalogue tests prove only published tours/destinations and approved current prices are exposed.
+- [x] D1 schema and migration contract tests pass in CI using SQLite; a live local D1 run remains pending.
+- [x] Worker SQL restricts public reads to published tours/destinations and approved current prices; live runtime integration remains pending.
 - [ ] Enquiry tests cover validation, origin, Turnstile, rate limiting, duplicate requests, outbox retry and private access.
 - [ ] R2 upload tests cover MIME, size, ownership, object key randomization and unauthorized reads.
 - [ ] Export, restore and rollback rehearsal succeeds with checksums and row counts.
